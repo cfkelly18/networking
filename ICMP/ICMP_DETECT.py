@@ -6,6 +6,8 @@ s= socket.socket(socket.AF_INET, socket.SOCK_RAW,dpkt.ip.IP_PROTO_ICMP)
 while True:
     
     packet= s.recvfrom(1024)
+
+
     
     print(packet)
     

@@ -2,12 +2,14 @@ import dpkt
 import socket
 
 
-def perform_xor(message):
-    key="Xc"
+def perform_xor(message,key):
+  #this function ensures they key is the right length and then performs the XOR
     if (len(key)<len(message)):
         dif=(len(message)-len(key))
-        padding=key[0:dif-1]
+       
+        padding=(dif*'x')
         key=(key+padding)
+       
 
     counter=0
     xor_string=""
@@ -16,15 +18,20 @@ def perform_xor(message):
         xor_string=(xor_string+str(new_chr))
         counter=counter+1
 
+
+    print("key: " ,key)
+    print("Message: ", message)
     print("XOR STRING: " ,xor_string)
     return(xor_string)
 
     
 
-#d_ip=input("Dest: ")
-#secret=input("Enter secret data: ")
+
+secret=input("Enter secret data: ")
+key=input("Enter Key: ")
+#using localhost for simplicity 
 d_ip='127.0.0.1'
-secret="HHHHHE"
+
 
 icmp_packet= dpkt.icmp.ICMP()
 icmp_packet.type=8
@@ -32,12 +39,10 @@ icmp_packet.type=8
 packet_body= dpkt.icmp.ICMP.Echo()
 packet_body.id=50
 packet_body.seq=12
-packet_body.data=perform_xor(secret).encode()
 
-
-
+#passing the body and the key into my function to be processed and then XOR
+packet_body.data=perform_xor(secret,key).encode()
 icmp_packet.data=packet_body
-print("SENDING: ", str(packet_body))
 send=(str(packet_body).encode())
 
 
